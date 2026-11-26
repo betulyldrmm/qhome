@@ -1,0 +1,17 @@
+# Starts the QHome USB helper when the UNO Q boots.
+#   mkdir -p ~/.config/systemd/user
+#   cp qhome-usb-helper.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload && systemctl --user enable --now qhome-usb-helper
+#   sudo loginctl enable-linger arduino      (so it runs without anyone logged in)
+# The user must be allowed to open serial ports:  sudo usermod -aG dialout arduino
+[Unit]
+Description=QHome USB helper (forwards USB Arduino boards to the QHome app)
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 %h/ArduinoApps/qhome/tools/qhome_usb_helper.py
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

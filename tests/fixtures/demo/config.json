@@ -1,0 +1,141 @@
+{
+  "version": 2,
+  "device": {
+    "name": "QHome Demo",
+    "node": "qhome",
+    "tz": "Europe/Istanbul",
+    "web_password": "",
+    "role": "master",
+    "master_host": "",
+    "master_port": 1883,
+    "master_user": "",
+    "master_pass": ""
+  },
+  "mqtt": {
+    "mode": "internal",
+    "port": 1883,
+    "username": "",
+    "password": "",
+    "host": "",
+    "ext_port": 1883,
+    "discovery": true,
+    "prefix": "homeassistant"
+  },
+  "boards": [
+    {
+      "id": "main",
+      "name": "UNO Q",
+      "model": "unoq",
+      "link": {
+        "type": "local"
+      }
+    },
+    {
+      "id": "garage",
+      "name": "Garage UNO",
+      "model": "uno",
+      "link": {
+        "type": "usb",
+        "port": "auto"
+      }
+    },
+    {
+      "id": "lab",
+      "name": "Lab Nano",
+      "model": "nano",
+      "link": {
+        "type": "i2c",
+        "bus": "wire",
+        "address": 16
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "status_led",
+      "type": "rgb_led",
+      "name": "Status LED",
+      "board": "main",
+      "pin": "LED3",
+      "props": {}
+    },
+    {
+      "id": "matrix",
+      "type": "led_matrix",
+      "name": "Matrix",
+      "board": "main",
+      "pin": "MATRIX",
+      "props": {}
+    },
+    {
+      "id": "button",
+      "type": "binary_input",
+      "name": "Door button",
+      "board": "main",
+      "pin": 2,
+      "props": {}
+    },
+    {
+      "id": "temp",
+      "type": "analog_sensor",
+      "name": "Room temp",
+      "board": "main",
+      "pin": 14,
+      "props": {
+        "calib": "linear",
+        "out_max": 50,
+        "unit": "C",
+        "interval": 500
+      }
+    },
+    {
+      "id": "fan",
+      "type": "pwm_output",
+      "name": "Fan",
+      "board": "main",
+      "pin": 9,
+      "props": {}
+    },
+    {
+      "id": "relay",
+      "type": "switch_output",
+      "name": "Garage light",
+      "board": "garage",
+      "pin": 7,
+      "props": {}
+    },
+    {
+      "id": "pir",
+      "type": "binary_input",
+      "name": "Garage PIR",
+      "board": "garage",
+      "pin": 4,
+      "props": {
+        "invert": false,
+        "pull": "none"
+      }
+    },
+    {
+      "id": "ldr",
+      "type": "analog_sensor",
+      "name": "Light level",
+      "board": "lab",
+      "pin": 14,
+      "props": {
+        "calib": "percent",
+        "unit": "%"
+      }
+    },
+    {
+      "id": "away",
+      "type": "virtual_switch",
+      "name": "Away mode",
+      "board": null,
+      "pin": null,
+      "props": {}
+    }
+  ],
+  "scripts": {
+    "workspace": {}
+  }
+}

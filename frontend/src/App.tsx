@@ -9,11 +9,17 @@ import { useDashboard } from "./hooks/useDashboard";
 import { translate, type Language } from "./i18n";
 
 type Page = "dashboard" | "boards" | "automations" | "settings" | "logs" | "help";
+const pages: Page[] = ["dashboard", "boards", "automations", "settings", "logs", "help"];
+const pageFromPath = (): Page => {
+  const candidate = window.location.pathname.replace(/^\/+|\/+$/g, "") as Page;
+  return pages.includes(candidate) ? candidate : "dashboard";
+};
+const pathForPage = (target: Page) => target === "dashboard" ? "/" : `/${target}`;
 
 export default function App() {
   const { data, error, refreshing, refresh } = useDashboard();
   const [language] = useState<Language>(() => localStorage.getItem("qhome.lang") === "tr" ? "tr" : "en");
-  const [page, setPage] = useState<Page>("dashboard");
+  const [page, setPage] = useState<Page>(pageFromPath);
   const [boardsDirty, setBoardsDirty] = useState(false);
   const [automationsDirty, setAutomationsDirty] = useState(false);
   const [settingsDirty, setSettingsDirty] = useState(false);
@@ -27,10 +33,17 @@ export default function App() {
     return () => window.removeEventListener("beforeunload", warn);
   }, [page, boardsDirty, automationsDirty, settingsDirty]);
 
+  useEffect(() => {
+    const restorePage = () => setPage(pageFromPath());
+    window.addEventListener("popstate", restorePage);
+    return () => window.removeEventListener("popstate", restorePage);
+  }, []);
+
   const navigate = (target: Page) => {
     if (target === page) return;
     const dirty = (page === "boards" && boardsDirty) || (page === "automations" && automationsDirty) || (page === "settings" && settingsDirty);
     if (dirty && !window.confirm(language === "tr" ? "Kaydedilmemiş değişiklikler silinsin mi?" : "Discard unsaved changes and leave this page?")) return;
+    window.history.pushState({}, "", pathForPage(target));
     setPage(target);
     setBoardsDirty(false);
     setAutomationsDirty(false);

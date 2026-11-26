@@ -1,0 +1,11 @@
+name: QHome
+description: "No-code smart home for the UNO Q: configure every pin, snap Scratch-style blocks together, link other Arduino boards, MQTT and Home Assistant built in"
+icon: 🏠
+# Port 7000 is served by QHome's own web server (python/qh_web.py). The web_ui brick is listed only
+# because App Lab opens the page of an app that declares it. Never import or instantiate
+# arduino.app_bricks.web_ui.WebUI in python/: it would take port 7000.
+ports:
+  - 1883
+  - 7001
+bricks:
+  - arduino:web_ui
